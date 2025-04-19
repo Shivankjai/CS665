@@ -68,11 +68,11 @@ namespace MyDbApp.Controllers
             {
                 new MySqlParameter("@name", vendorData.vendor_name),
                 new MySqlParameter("@productType", vendorData.vendor_product_type),
-                new MySqlParameter("@id", vendorData.Id)
+                new MySqlParameter("@id", vendorData.vendor_id)
 
             };
             var id = await _context.ExecuteSqlQueryAsync(sql, parameters);
-            return CreatedAtAction(nameof(GetVendor), new { id = id }, vendorData);
+            return CreatedAtAction(nameof(GetVendor), new { id = vendorData.vendor_id}, vendorData);
 
         }
 
