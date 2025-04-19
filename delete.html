@@ -1,0 +1,170 @@
+
+<html>
+<head>
+  <title>Delete Records</title>
+</head>
+<body>
+
+  <h2>DELETE RECORDS — Vendor, VendorRelation, Employees, OfficeBranches</h2>
+
+  <!-- ========== Delete Vendor ========== -->
+  <h3>Delete Vendor</h3>
+  <input type="number" id="vendorDeleteId" placeholder="Enter Vendor ID">
+  <button onclick="deleteVendor()">Delete Vendor</button>
+  <div id="vendorDeleteMsg" class="mt-2 text-success"></div>
+
+  <hr>
+
+  <!-- ========== Delete VendorRelation ========== -->
+  <h3>Delete VendorRelation</h3>
+  <input type="number" id="vrVendorId" placeholder="Vendor ID">
+  <input type="number" id="vrBranchId" placeholder="Branch ID">
+  <button onclick="deleteVendorRelation()">Delete VendorRelation</button>
+  <div id="vendorRelationDeleteMsg" class="mt-2 text-success"></div>
+ 
+ <hr>
+ 
+  <!-- ===================== EMPLOYEES ===================== -->
+  <h3>Delete Employee</h3>
+  <input type="number" id="employeeDeleteId" placeholder="Enter Employee ID">
+  <button onclick="deleteEmployee()">Delete Employee</button>
+  <div id="employeeDeleteMsg" class="mt-2 text-success"></div>
+  
+   <hr>
+
+  <!-- ===================== OFFICE BRANCHES ===================== -->
+  <h3>Delete Office Branch</h3>
+  <input type="number" id="branchDeleteId" placeholder="Enter Branch ID">
+  <button onclick="deleteOfficeBranch()">Delete Branch</button>
+  <div id="branchDeleteMsg" class="mt-2 text-success"></div>
+  
+   <hr>
+
+  <!-- ===================== CLIENTS ===================== -->
+  <h3>Delete Client</h3>
+  <input type="number" id="clientDeleteId" placeholder="Enter Client ID">
+  <button onclick="deleteClient()">Delete Client</button>
+  <div id="clientDeleteMsg" class="mt-2 text-success"></div>
+
+  
+  <script>
+    const baseUrl = "https://localhost:7044";
+
+    <!-- Delete Vendor -->
+    function deleteVendor() {
+      const vendorId = document.getElementById("vendorDeleteId").value;
+
+      if (!vendorId) {
+        alert("Please enter a vendor ID.");
+        return;
+      }
+
+      fetch(`${baseUrl}/api/Vendor/${vendorId}`, {
+        method: 'DELETE'
+      })
+      .then(res => {
+        if (res.ok) {
+          document.getElementById("vendorDeleteMsg").textContent = `Vendor ID ${vendorId} deleted successfully.`;
+        } else {
+          document.getElementById("vendorDeleteMsg").textContent = `Failed to delete Vendor ID ${vendorId}.`;
+        }
+      })
+      .catch(err => {
+        console.error("Delete error:", err);
+        document.getElementById("vendorDeleteMsg").textContent = "Error occurred during deletion.";
+      });
+    }
+
+    <!-- Delete VendorRelation -->
+    function deleteVendorRelation() {
+      const vendorId = document.getElementById("vrVendorId").value;
+      const branchId = document.getElementById("vrBranchId").value;
+
+      if (!vendorId || !branchId) {
+        alert("Please enter both Vendor ID and Branch ID.");
+        return;
+      }
+
+      fetch(`${baseUrl}/api/VendorRelation`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          vendor_id: vendorId,
+          branch_id: branchId
+        })
+      })
+      .then(res => {
+        if (res.ok) {
+          document.getElementById("vendorRelationDeleteMsg").textContent =
+            `VendorRelation (Vendor ID: ${vendorId}, Branch ID: ${branchId}) deleted successfully.`;
+        } else {
+          document.getElementById("vendorRelationDeleteMsg").textContent =
+            `Failed to delete VendorRelation (${vendorId}, ${branchId}).`;
+        }
+      })
+      .catch(err => {
+        console.error("Error deleting relation:", err);
+        document.getElementById("vendorRelationDeleteMsg").textContent = "Error occurred during deletion.";
+      });
+    }
+	<!-- Delete Employees -->
+	function deleteEmployee() {
+      const empId = document.getElementById("employeeDeleteId").value;
+
+      if (!empId) {
+        alert("Please enter an employee ID.");
+        return;
+      }
+
+      fetch(`${baseUrl}/api/Employees/${empId}`, {
+        method: 'DELETE'
+      })
+      .then(res => {
+        document.getElementById("employeeDeleteMsg").textContent =
+          res.ok ? `Employee ID ${empId} deleted successfully.` :
+                   `Failed to delete Employee ID ${empId}.`;
+      })
+      .catch(err => {
+        console.error("Delete error:", err);
+        document.getElementById("employeeDeleteMsg").textContent = "Error occurred during deletion.";
+      });
+    }
+	<!-- Delete OfficeBranches-->
+	function deleteOfficeBranch() {
+      const branchId = document.getElementById("branchDeleteId").value;
+
+      if (!branchId) {
+        alert("Please enter a branch ID.");
+        return;
+      }
+
+      fetch(`${baseUrl}/api/OfficeBranches/${branchId}`, {
+        method: 'DELETE'
+      })
+      .then(res => {
+        document.getElementById("branchDeleteMsg").textContent =
+          res.ok ? `Branch ID ${branchId} deleted successfully.` :
+                   `Failed to delete Branch ID ${branchId}.`;
+      })
+      .catch(err => {
+        console.error("Delete error:", err);
+        document.getElementById("branchDeleteMsg").textContent = "Error occurred during deletion.";
+      });
+    }
+	<!--Delete Client-->
+	function deleteClient() {
+      const clientId = document.getElementById("clientDeleteId").value;
+      if (!clientId) return alert("Enter Client ID");
+
+      fetch(`${baseUrl}/api/Clients/${clientId}`, { method: 'DELETE' })
+        .then(res => {
+          document.getElementById("clientDeleteMsg").textContent =
+            res.ok ? `Client ID ${clientId} deleted.` : `Failed to delete Client ID ${clientId}.`;
+        });
+    }
+  </script>
+</body>
+</html>
+
