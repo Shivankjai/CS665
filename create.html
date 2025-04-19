@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Records</title>
+</head>
+<body>
+
+  <h2>CREATE RECORDS</h2>
+
+  <!-- ===================== VENDOR ===================== -->
+  <h3>Create Vendor</h3>
+  <input type="text" id="vendorName" placeholder="Vendor Name"><br>
+  <input type="text" id="vendorProductType" placeholder="Product Type"><br>
+  <button onclick="createVendor()">Add Vendor</button>
+  <div id="vendorMsg" class="mt-2 text-success"></div>
+
+  <hr>
+
+  <!-- ===================== VENDOR RELATION ===================== -->
+  <h3>Create VendorRelation</h3>
+  <form onsubmit="enternum(event)">
+    <input type="number" id="branch" placeholder="Branch ID"><br>
+    <input type="number" id="vendorid" placeholder="Vendor ID"><br>
+    <input type="submit" value="Add Relation">
+  </form>
+  <div id="msgBox" class="mt-2 text-success"></div>
+
+  <hr>
+
+  <!-- ===================== EMPLOYEES ===================== -->
+  <h3>Create Employee</h3>
+  <input type="number" id="empManagerId" placeholder="Manager ID"><br>
+  <input type="text" id="empFirstName" placeholder="First Name"><br>
+  <input type="text" id="empLastName" placeholder="Last Name"><br>
+  <input type="number" id="empBranchId" placeholder="Branch ID"><br>
+  <input type="number" id="empSalary" placeholder="Salary"><br>
+  <button onclick="createEmployee()">Add Employee</button>
+  <div id="employeeMsg" class="mt-2 text-success"></div>
+  
+  <hr>
+  <!-- ===================== OFFICE BRANCHES ===================== -->
+  <h3>Create Office Branch</h3>
+  <input type="text" id="countryName" placeholder="Country Name"><br>
+  <input type="text" id="founderName" placeholder="Branch Founder Name"><br>
+  <input type="text" id="branchName" placeholder="Branch Name"><br>
+  <button onclick="createOfficeBranch()">Add Branch</button>
+  <div id="branchMsg" class="mt-2 text-success"></div>
+  
+<hr>
+<!-- ===================== CLIENTS ===================== -->
+  <h3>Create Client</h3>
+  <input type="text" id="clientCompany" placeholder="Company Name"><br>
+  <input type="email" id="clientEmail" placeholder="Email ID"><br>
+  <input type="number" id="clientEmployeeId" placeholder="Employee ID"><br>
+  <button onclick="createClient()">Add Client</button>
+  <div id="clientMsg"></div>
+
+  <!-- ===================== SCRIPT ===================== -->
+  <script>
+    const baseUrl = "https://localhost:7044";
+
+    // Vendor
+    function createVendor() {
+      const name = document.getElementById("vendorName").value;
+      const type = document.getElementById("vendorProductType").value;
+
+      if (!name || !type) {
+        alert("Please enter vendor name and product type.");
+        return;
+      }
+
+      fetch(`${baseUrl}/api/Vendor`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          vendor_name: name,
+          vendor_product_type: type
+        })
+      })
+      .then(res => {
+        document.getElementById("vendorMsg").textContent =
+          res.ok ? "Vendor created successfully!" : "Failed to create vendor.";
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        document.getElementById("vendorMsg").textContent = "Error occurred while creating vendor.";
+      });
+    }
+
+    // VendorRelation
+    function enternum(event) {
+      event.preventDefault();
+
+      const branchid = document.getElementById("branch").value;
+      const vendorid = document.getElementById("vendorid").value;
+
+      if (!branchid || !vendorid) {
+        alert("Please enter both Branch ID and Vendor ID.");
+        return;
+      }
+
+      fetch(`${baseUrl}/api/VendorRelation`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ branch_id: branchid, vendor_id: vendorid })
+      })
+      .then(res => {
+        document.getElementById("msgBox").textContent =
+          res.ok ? "Relation added successfully!" : "Failed to add relation.";
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        document.getElementById("msgBox").textContent = "Error adding relation.";
+      });
+    }
+
+    // Employees
+    function createEmployee() {
+      const managerId = document.getElementById("empManagerId").value;
+      const firstName = document.getElementById("empFirstName").value;
+      const lastName = document.getElementById("empLastName").value;
+      const branchId = document.getElementById("empBranchId").value;
+      const salary = document.getElementById("empSalary").value;
+
+      if (!firstName || !lastName || !branchId || !salary) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      fetch(`${baseUrl}/api/Employees`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          manager_id: managerId,
+          first_name: firstName,
+          last_name: lastName,
+          branch_id: branchId,
+          salary: salary
+        })
+      })
+      .then(res => {
+        document.getElementById("employeeMsg").textContent =
+          res.ok ? "Employee created successfully!" : "Failed to create employee.";
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        document.getElementById("employeeMsg").textContent = "Error occurred while creating employee.";
+      });
+    }
+	// Create Office Branch
+    function createOfficeBranch() {
+      const countryName = document.getElementById("countryName").value;
+      const founderName = document.getElementById("founderName").value;
+      const branchName = document.getElementById("branchName").value;
+
+      if (!countryName || !founderName || !branchName) {
+        alert("Please fill in all fields for the office branch.");
+        return;
+      }
+
+      fetch(`${baseUrl}/api/OfficeBranches`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          country_name: countryName,
+          branch_founder_name: founderName,
+          branch_name: branchName
+        })
+      })
+      .then(res => {
+        document.getElementById("branchMsg").textContent =
+          res.ok ? "Office branch created successfully!" : "Failed to create office branch.";
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        document.getElementById("branchMsg").textContent = "Error occurred during branch creation.";
+      });
+    }
+	//Create Client
+	 function createClient() {
+      const data = {
+        company_name: document.getElementById("clientCompany").value,
+        client_email_id: document.getElementById("clientEmail").value,
+        employee_id: document.getElementById("clientEmployeeId").value
+      };
+
+      fetch(`${baseUrl}/api/Clients`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => {
+        document.getElementById("clientMsg").textContent =
+          res.ok ? "Client created." : "Failed to create client.";
+      });
+    }
+  </script>
+
+</body>
+</html>
