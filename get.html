@@ -1,0 +1,116 @@
+
+<html>
+<head>
+  <title>Get Data</title>
+</head>
+<body>
+
+  <h2>Get Query Result & Join API Demo</h2>
+
+  <!-- Dynamic section title -->
+  <h3 id="sectionTitle">Result Output:</h3>
+  <pre id="output" style="background:#f1f1f1; padding:10px;"></pre>
+
+  <!-- Buttons to call different GET APIs -->
+  <button onclick="getVendorRelation()">Fetch Vendor Relations</button>
+  <button onclick="getVendors()">Fetch Vendors</button>
+  <button onclick="getEmployees()">Fetch Employees</button>
+  <button onclick="getOfficeBranches()">Fetch Office Branches</button>
+   <button onclick="getClients()">Fetch Clients</button>
+   
+  <h3>Predefined Join/Subquery APIs</h3>
+  <button onclick="getEmployeesWithClients()">Employees + Clients</button>
+  <button onclick="getVendorsInCanada()">Vendors in Canada</button>
+  <button onclick="getEmployeesClientsBranches()">Employees + Clients + Branches</button>
+
+  <script>
+    const baseUrl = "https://localhost:7044";
+
+    <!-- Helper: Set title and display result -->
+    function updateOutput(title, data) {
+      document.getElementById("sectionTitle").textContent = title;
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+    }
+
+    <!-- GET VendorRelation-->
+    function getVendorRelation() {
+      fetch(`${baseUrl}/api/VendorRelation/GetVendorRelation`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => res.json())
+      .then(data => updateOutput("VendorRelation Data", data))
+      .catch(err => {
+        console.error("Error:", err);
+        updateOutput("VendorRelation Data", "Error fetching data.");
+      });
+    }
+
+    <!-- GET Vendors -->
+    function getVendors() {
+      fetch(`${baseUrl}/api/Vendor/GetVendor`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => res.json())
+      .then(data => updateOutput("Vendor Table Data", data))
+      .catch(err => {
+        console.error("Error:", err);
+        updateOutput("Vendor Table Data", "Error fetching vendors.");
+      });
+    }
+	
+	 <!-- Get Employees -->
+    function getEmployees() {
+      fetch(`${baseUrl}/api/Employees/GetEmployees`)
+        .then(res => res.json())
+        .then(data => updateOutput("Employees Table Data", data))
+        .catch(err => {
+          console.error("Error:", err);
+          updateOutput("Employees Table Data", "Error fetching employee data.");
+        });
+    }
+	<!-- Get OfficeBranches-->
+	function getOfficeBranches() {
+      fetch(`${baseUrl}/api/OfficeBranches/GetOfficeBranches`)
+        .then(res => res.json())
+        .then(data => updateOutput("OfficeBranches Table Data", data))
+        .catch(err => updateOutput("OfficeBranches Table Data", "Error fetching branch data."));
+    }
+	<!--Get Client-->
+	 function getClients() {
+      fetch(`${baseUrl}/api/Clients/GetClients`)
+        .then(res => res.json())
+        .then(data => updateOutput("Clients Table Data", data))
+        .catch(() => updateOutput("Clients Table Data", "Error fetching clients."));
+    }
+
+ <!--===================== JOIN / SUBQUERY FUNCTIONS ===================== -->
+
+     <!-- Predefined Join #1 -->
+    function getEmployeesWithClients() {
+      fetch(`${baseUrl}/api/Joints/GetEmployeesWithClients`)
+        .then(response => response.json())
+        .then(data => updateOutput("Employees and Their Clients", data))
+        .catch(error => updateOutput("Employees and Their Clients", "Error occurred"));
+    }
+
+    <!-- Predefined Join #2 -->
+    function getVendorsInCanada() {
+      fetch(`${baseUrl}/api/Joints/GetVendorsInCanada`)
+        .then(response => response.json())
+        .then(data => updateOutput("Vendors Associated with Canadian Branches", data))
+        .catch(error => updateOutput("Vendors Associated with Canadian Branches", "Error occurred"));
+    }
+
+    <!-- Predefined Join #3 -->
+    function getEmployeesClientsBranches() {
+      fetch(`${baseUrl}/api/Joints/GetEmployeesClientsBranches`)
+        .then(response => response.json())
+        .then(data => updateOutput("Employees with Client & Branch Info", data))
+        .catch(error => updateOutput("Employees with Client & Branch Info", "Error occurred"));
+    }
+  </script>
+
+</body>
+</html>
