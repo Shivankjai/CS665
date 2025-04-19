@@ -70,10 +70,10 @@ namespace MyDbApp.Controllers
                 new MySqlParameter("@lastname", employeesData.last_name),
                 new MySqlParameter("@branchid", employeesData.branch_id),
                 new MySqlParameter("@Sal", employeesData.salary),
-                new MySqlParameter("@id", employeesData.Id)
+                new MySqlParameter("@id", employeesData.employees_id)
                 };
             var id = await _context.ExecuteSqlQueryAsync(sql, parameters);
-            return CreatedAtAction(nameof(GetEmployees), new { id = id }, employeesData);
+            return CreatedAtAction(nameof(GetEmployees), new { id = employeesData.employees_id }, employeesData);
 
         }
         //Need to define some sql joints
