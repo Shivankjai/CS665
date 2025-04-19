@@ -4,7 +4,7 @@ namespace MyDbApp.Models
 {
     public class EmployeesData
     {
-        public int Id { get; set; }
+        public int employees_id { get; set; }
         
         public int manager_id { get; set; }
 
