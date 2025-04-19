@@ -71,10 +71,10 @@ namespace MyDbApp.Controllers
                 new MySqlParameter("@countryname", officeBranchesData.country_name),
                 new MySqlParameter("@foundername", officeBranchesData.branch_founder_name),
                 new MySqlParameter("@branchname", officeBranchesData.branch_name),
-                new MySqlParameter("@id", officeBranchesData.Id)
+                new MySqlParameter("@id", officeBranchesData.branch_id)
             };
             var id = await _context.ExecuteSqlQueryAsync(sql, parameters);
-            return CreatedAtAction(nameof(GetOfficeBranches), new { id = id }, officeBranchesData);
+            return CreatedAtAction(nameof(GetOfficeBranches), new { id = officeBranchesData.branch_id }, officeBranchesData);
 
         }
         //Need to define some sql joints
