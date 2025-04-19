@@ -2,7 +2,7 @@
 {
     public class ClientsData
     {
-        public int Id { get; set; }
+        public int client_id { get; set; }
 
         public string company_name { get; set; }
 
