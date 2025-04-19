@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Update Records</title>
+</head>
+<body>
+
+  <h2>UPDATE RECORD — Vendor,VendorRelation, Employees, OfficeBranch Table</h2>
+
+  <!-- Update Vendor Section -->
+  <h3>Update Vendor</h3>
+  <input type="number" id="vendorId" placeholder="Vendor ID">
+  <input type="text" id="vendorName" placeholder="New Vendor Name">
+  <input type="text" id="vendorProductType" placeholder="New Product Type">
+  <button onclick="updateVendor()">Update Vendor</button>
+  <div id="vendorUpdateMsg" class="mt-2 text-success"></div>
+  
+  <hr>
+  <!-- ===================== EMPLOYEE ===================== -->
+  <h3>Update Employee</h3>
+  <input type="number" id="employeeId" placeholder="Employee ID"><br>
+  <input type="number" id="empManagerId" placeholder="Manager ID"><br>
+  <input type="text" id="empFirstName" placeholder="First Name"><br>
+  <input type="text" id="empLastName" placeholder="Last Name"><br>
+  <input type="number" id="empBranchId" placeholder="Branch ID"><br>
+  <input type="number" id="empSalary" placeholder="Salary"><br>
+  <button onclick="updateEmployee()">Update Employee</button>
+  <div id="employeeUpdateMsg" class="mt-2 text-success"></div>
+  
+   <hr>
+
+  <!-- ===================== OFFICE BRANCHES ===================== -->
+  <h3>Update Office Branch</h3>
+  <input type="number" id="branchId" placeholder="Branch ID"><br>
+  <input type="text" id="branchCountry" placeholder="Country Name"><br>
+  <input type="text" id="branchFounder" placeholder="Founder Name"><br>
+  <input type="text" id="branchName" placeholder="Branch Name"><br>
+  <button onclick="updateBranch()">Update Branch</button>
+  <div id="branchUpdateMsg" class="mt-2 text-success"></div>
+  
+  <hr>
+   <!-- ===================== CLIENT ===================== -->
+  <h3>Update Client</h3>
+  <input type="number" id="clientId" placeholder="Client ID"><br>
+  <input type="text" id="clientCompany" placeholder="Company Name"><br>
+  <input type="email" id="clientEmail" placeholder="Email"><br>
+  <input type="number" id="clientEmployeeId" placeholder="Employee ID"><br>
+  <button onclick="updateClient()">Update Client</button>
+  <div id="clientUpdateMsg"></div>
+
+  <!-- ===================== OUTPUT ===================== -->
+  <h3>Updated Data Preview</h3>
+  <pre id="output" style="background:#f1f1f1; padding:10px;"></pre>
+  
+
+  <script>
+    const baseUrl = "https://localhost:7044";
+	
+	function getVendors() {
+      fetch(`${baseUrl}/api/Vendor/GetVendor`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+          console.error("Error fetching vendors:", err);
+          document.getElementById("output").textContent = "Error fetching vendor list.";
+        });
+    }
+	
+      <!--Update Vendor -->
+    function updateVendor() {
+      const vendorId = document.getElementById("vendorId").value;
+      const vendorName = document.getElementById("vendorName").value;
+      const productType = document.getElementById("vendorProductType").value;
+
+      if (!vendorId || !vendorName || !productType) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      fetch(`${baseUrl}/api/Vendor`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          vendor_id: vendorId,
+          vendor_name: vendorName,
+          vendor_product_type: productType
+        })
+      })
+      .then(res => {
+        if (res.ok) {
+          document.getElementById("vendorUpdateMsg").textContent = "Vendor updated successfully.";
+        } else {
+          document.getElementById("vendorUpdateMsg").textContent = "Failed to update vendor.";
+        }
+      })
+      .catch(err => {
+        console.error("Update error:", err);
+        document.getElementById("vendorUpdateMsg").textContent = "Error occurred during update.";
+      });
+    }
+	<!-- Update Employees-->
+	function updateEmployee() {
+      const id = document.getElementById("employeeId").value;
+      const managerId = document.getElementById("empManagerId").value;
+      const firstName = document.getElementById("empFirstName").value;
+      const lastName = document.getElementById("empLastName").value;
+      const branchId = document.getElementById("empBranchId").value;
+      const salary = document.getElementById("empSalary").value;
+
+      if (!id || !firstName || !lastName || !branchId || !salary) {
+        alert("Please fill in all Employee fields.");
+        return;
+      }
+
+      fetch(`${baseUrl}/api/Employees`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          employees_id: id,
+          manager_id: managerId,
+          first_name: firstName,
+          last_name: lastName,
+          branch_id: branchId,
+          salary: salary
+        })
+      })
+      .then(async res => {
+        const responseText = await res.text();
+        if (res.ok) {
+          document.getElementById("employeeUpdateMsg").textContent = "Employee updated successfully.";
+          getEmployees();
+        } else {
+          document.getElementById("employeeUpdateMsg").textContent = "Failed to update employee. " + responseText;
+        }
+      })
+      .catch(err => {
+        console.error("Employee update error:", err);
+        document.getElementById("employeeUpdateMsg").textContent = "Error occurred during employee update.";
+      });
+    }
+	 function getEmployees() {
+      fetch(`${baseUrl}/api/Employees/GetEmployees`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+          document.getElementById("output").textContent = "Error fetching employees.";
+        });
+    }
+	
+	<!--Update Office Branch -->
+	 function updateBranch() {
+      const branchId = document.getElementById("branchId").value;
+      const country = document.getElementById("branchCountry").value;
+      const founder = document.getElementById("branchFounder").value;
+      const name = document.getElementById("branchName").value;
+
+      if (!branchId || !country || !founder || !name) {
+        alert("Please fill in all branch fields.");
+        return;
+      }
+
+      fetch(`${baseUrl}/api/OfficeBranches`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          branch_id: branchId,
+          country_name: country,
+          branch_founder_name: founder,
+          branch_name: name
+        })
+      })
+      .then(async res => {
+        const responseText = await res.text();
+        if (res.ok) {
+          document.getElementById("branchUpdateMsg").textContent = "Branch updated successfully.";
+          getOfficeBranches();
+        } else {
+          document.getElementById("branchUpdateMsg").textContent = "Failed to update branch. " + responseText;
+        }
+      })
+      .catch(err => {
+        console.error("Branch update error:", err);
+        document.getElementById("branchUpdateMsg").textContent = "Error occurred during branch update.";
+      });
+    }
+	  function getOfficeBranches() {
+      fetch(`${baseUrl}/api/OfficeBranches/GetOfficeBranches`)
+        .then(res => res.json())
+        .then(data => document.getElementById("output").textContent = JSON.stringify(data, null, 2))
+        .catch(() => document.getElementById("output").textContent = "Error fetching branches.");
+    }
+	<!-- Update Clients-->
+	 function updateClient() {
+      const data = {
+        client_id: document.getElementById("clientId").value,
+        company_name: document.getElementById("clientCompany").value,
+        client_email_id: document.getElementById("clientEmail").value,
+        employee_id: document.getElementById("clientEmployeeId").value
+      };
+
+      fetch(`${baseUrl}/api/Clients`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+        .then(res => res.text())
+        .then(msg => {
+          document.getElementById("clientUpdateMsg").textContent = "Client updated.";
+          getClients();
+        });
+    }
+	 function getClients() {
+      fetch(`${baseUrl}/api/Clients/GetClients`)
+        .then(res => res.json())
+        .then(data => document.getElementById("output").textContent = JSON.stringify(data, null, 2));
+    }
+  </script>
+
+</body>
+</html>
