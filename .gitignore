@@ -1,0 +1,27 @@
+﻿# Build output
+bin/
+obj/
+
+# Visual Studio working folders
+.vs/
+*.user
+*.suo
+
+# ASP.NET Core config and secrets
+appsettings.Development.json
+appsettings.*.json
+secrets.json
+.env
+
+# Logs
+*.log
+
+# Publish output
+.publish/
+
+# User-specific files
+*.userosscache
+*.sln.docstates
+
+# Node packages (if applicable)
+node_modules/
